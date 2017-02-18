@@ -99,7 +99,7 @@ int main (int argc, char* argv[])
 				string("\"-v") + workingDir + ":/workingdir\" " +
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
-				string("-ti --rm ") +
+				string("-ti --rm --entrypoint=\"\" ") +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
 				string("\"/scriptdir/") + scriptFile + "\" " + trailingArgs;
