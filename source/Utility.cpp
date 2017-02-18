@@ -118,7 +118,7 @@ string Utility::strReplace(const string& find, const string& replace, string sub
 	{
 		//Copy the string into a buffer, since dirname may modify the input string
 		unique_ptr<char[]> buf( new char[path.size()] );
-		memcpy(buf.get(), path.c_str(), path.size());
+		memcpy(buf.get(), path.c_str(), path.size()+1);
 		return ::dirname(buf.get());
 	}
 	
@@ -126,7 +126,7 @@ string Utility::strReplace(const string& find, const string& replace, string sub
 	{
 		//Copy the string into a buffer, since basename may modify the input string
 		unique_ptr<char[]> buf( new char[path.size()] );
-		memcpy(buf.get(), path.c_str(), path.size());
+		memcpy(buf.get(), path.c_str(), path.size()+1);
 		return ::basename(buf.get());
 	}
 	
