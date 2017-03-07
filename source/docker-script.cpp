@@ -93,6 +93,11 @@ int main (int argc, char* argv[])
 				docker = "nvidia-docker";
 			}
 			
+			//If we were invoked using the symlink `nvidia-docker-script`, always use `nvidia-docker`
+			if (string(argv[0]) == "nvidia-docker-script") {
+				docker = "nvidia-docker";
+			}
+			
 			//Build the `docker run` command
 			string command = docker + " run " +
 				string("\"-v") + scriptDir + ":/scriptdir\" " +
