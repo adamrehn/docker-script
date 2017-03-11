@@ -40,13 +40,22 @@ int main (int argc, char* argv[])
 	{
 		try
 		{
-			//Check if verbose output was requested
-			bool verboseOutput = (argc > 2 && string(argv[2]) == "---verbose");
-			
-			//Gather all remaining CLI arguments, so they can be passed to the script
+			//Parse CLI arguments, keeping docker-script options separate from script options
+			bool verboseOutput = false;
+			bool enableDebugging = false;
 			string trailingArgs = "";
-			for (int i = ((verboseOutput == true) ? 3 : 2); i < argc; ++i) {
-				trailingArgs += "\"" + string(argv[i]) + "\" ";
+			for (int i = 2; i < argc; ++i)
+			{
+				string currArg = string(argv[i]);
+				if (currArg == "---verbose") {
+					verboseOutput = true;
+				}
+				else if (currArg == "---debug") {
+					enableDebugging = true;
+				}
+				else {
+					trailingArgs += "\"" + currArg + "\" ";
+				}
 			}
 			
 			//Attempt to open the script file
@@ -102,6 +111,7 @@ int main (int argc, char* argv[])
 			string command = docker + " run " +
 				string("\"-v") + scriptDir + ":/scriptdir\" " +
 				string("\"-v") + workingDir + ":/workingdir\" " +
+				string((enableDebugging == true) ? "--privileged=true " : "") +
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
 				string("-ti --rm --entrypoint=\"\" ") +
