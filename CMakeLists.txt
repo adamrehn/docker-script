@@ -22,3 +22,18 @@ add_executable(docker-script
 # Installation rules
 # (Install using `cmake --build . --target install`)
 install(TARGETS docker-script DESTINATION bin)
+
+# Under non-Windows platforms, we support the nvidia-docker-script symlink
+if (!WIN32)
+	
+	# Create the symlink when the docker-script executable is built
+	add_custom_command(
+		TARGET docker-script
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/bin/docker-script nvidia-docker-script
+	)
+	
+	# Copy the symlink at install time
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nvidia-docker-script DESTINATION bin)
+	
+endif()
