@@ -143,7 +143,7 @@ int main (int argc, char* argv[])
 	}
 	else
 	{
-		clog << "Usage:" << endl << argv[0] << " <SCRIPT> [---verbose] [args for script]" << endl << endl;
+		clog << "Usage:" << endl << argv[0] << " <SCRIPT> [---verbose] [---debug] [args for script]" << endl << endl;
 		clog << "The first line of the script file should be a normal Unix shebang line." << endl;
 		clog << "The second line of the script file should be:" << endl;
 		clog << "#!<IMAGE> <INTERPRETER>" << endl << endl;
