@@ -46,6 +46,7 @@ int main (int argc, char* argv[])
 		{
 			//Parse CLI arguments, keeping docker-script options separate from script options
 			string docker = VANILLA_DOCKER;
+			string name = "";
 			bool interactive = true;
 			bool verboseOutput = false;
 			bool enableDebugging = false;
@@ -68,6 +69,9 @@ int main (int argc, char* argv[])
 				}
 				else if (currArg == "---dry-run") {
 					dryrun = true;
+				}
+				else if (currArg.substr(0,8) == "---name=") {
+					name = currArg.substr(8);
 				}
 				else {
 					trailingArgs += "\"" + currArg + "\" ";
@@ -130,6 +134,7 @@ int main (int argc, char* argv[])
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
 				string((interactive == true) ? "-ti " : "-t ") +
+				string((!name.empty()) ? "--name \"" + name + "\" " : "") +
 				string("--rm --entrypoint=\"\" ") +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
@@ -166,10 +171,18 @@ int main (int argc, char* argv[])
 	}
 	else
 	{
-		clog << "Usage:" << endl << argv[0] << " <SCRIPT> [---verbose] [---debug] [args for script]" << endl << endl;
+		clog << "Usage:" << endl << argv[0] << " <SCRIPT> [options] [args for script]" << endl << endl;
 		clog << "The first line of the script file should be a normal Unix shebang line." << endl;
 		clog << "The second line of the script file should be:" << endl;
 		clog << "#!<IMAGE> <INTERPRETER>" << endl << endl;
+		clog << "Supported options:" << endl;
+		clog << "---verbose            Enable verbose output" << endl;
+		clog << "---debug              Enable debugging inside the container" << endl;
+		clog << "---non-interactive    Non-interactive mode" << endl;
+		clog << "---nvidia-docker      Use `nvidia-docker` instead of `docker`" << endl;
+		clog << "---dry-run            Output generated command instead of running it" << endl;
+		clog << "---name=NAME          Specify container name" << endl;
+		clog << endl;
 	}
 	
 	return 0;
