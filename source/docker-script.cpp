@@ -49,6 +49,7 @@ int main (int argc, char* argv[])
 			bool interactive = true;
 			bool verboseOutput = false;
 			bool enableDebugging = false;
+			bool dryrun = false;
 			string trailingArgs = "";
 			for (int i = 2; i < argc; ++i)
 			{
@@ -64,6 +65,9 @@ int main (int argc, char* argv[])
 				}
 				else if (currArg == "---nvidia-docker") {
 					docker = NVIDIA_DOCKER;
+				}
+				else if (currArg == "---dry-run") {
+					dryrun = true;
 				}
 				else {
 					trailingArgs += "\"" + currArg + "\" ";
@@ -125,7 +129,7 @@ int main (int argc, char* argv[])
 				string((enableDebugging == true) ? "--privileged=true " : "") +
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
-				string((interactive == true) ? "-ti " : "") +
+				string((interactive == true) ? "-ti " : "-t ") +
 				string("--rm --entrypoint=\"\" ") +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
@@ -144,8 +148,15 @@ int main (int argc, char* argv[])
 				clog << endl << "Docker command:" << endl << command << endl << endl;
 			}
 			
-			//Invoke docker
-			return system(command.c_str());
+			//If we are performing a dry run, simply print the command that would have been invoked
+			if (dryrun == true) {
+				std::clog << command << std::endl;
+			}
+			else
+			{
+				//Invoke docker
+				return system(command.c_str());
+			}
 		}
 		catch (std::runtime_error& e)
 		{
