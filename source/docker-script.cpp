@@ -41,6 +41,7 @@ int main (int argc, char* argv[])
 		try
 		{
 			//Parse CLI arguments, keeping docker-script options separate from script options
+			bool interactive = true;
 			bool verboseOutput = false;
 			bool enableDebugging = false;
 			string trailingArgs = "";
@@ -52,6 +53,9 @@ int main (int argc, char* argv[])
 				}
 				else if (currArg == "---debug") {
 					enableDebugging = true;
+				}
+				else if (currArg == "---non-interactive") {
+					interactive = false;
 				}
 				else {
 					trailingArgs += "\"" + currArg + "\" ";
@@ -114,7 +118,8 @@ int main (int argc, char* argv[])
 				string((enableDebugging == true) ? "--privileged=true " : "") +
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
-				string("-ti --rm --entrypoint=\"\" ") +
+				string((interactive == true) ? "-ti" : "") +
+				string("--rm --entrypoint=\"\" ") +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
 				string("\"/scriptdir/") + scriptFile + "\" " + trailingArgs;
