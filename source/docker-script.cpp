@@ -150,7 +150,7 @@ int main (int argc, char* argv[])
 			
 			//If we are performing a dry run, simply print the command that would have been invoked
 			if (dryrun == true) {
-				std::clog << command << std::endl;
+				std::cout << command << std::endl;
 			}
 			else
 			{
