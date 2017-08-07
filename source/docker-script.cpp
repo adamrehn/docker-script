@@ -138,7 +138,7 @@ int main (int argc, char* argv[])
 			}
 			
 			//Invoke docker
-			system(command.c_str());
+			return system(command.c_str());
 		}
 		catch (std::runtime_error& e)
 		{
