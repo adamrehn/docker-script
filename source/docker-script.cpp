@@ -33,6 +33,10 @@ using std::vector;
 using std::clog;
 using std::endl;
 
+//The different versions of docker we support
+#define VANILLA_DOCKER "docker"
+#define NVIDIA_DOCKER  "nvidia-docker"
+
 int main (int argc, char* argv[])
 {
 	//Check that a script file was specified
@@ -41,6 +45,7 @@ int main (int argc, char* argv[])
 		try
 		{
 			//Parse CLI arguments, keeping docker-script options separate from script options
+			string docker = VANILLA_DOCKER;
 			bool interactive = true;
 			bool verboseOutput = false;
 			bool enableDebugging = false;
@@ -56,6 +61,9 @@ int main (int argc, char* argv[])
 				}
 				else if (currArg == "---non-interactive") {
 					interactive = false;
+				}
+				else if (currArg == "---nvidia-docker") {
+					docker = NVIDIA_DOCKER;
 				}
 				else {
 					trailingArgs += "\"" + currArg + "\" ";
@@ -100,15 +108,14 @@ int main (int argc, char* argv[])
 			
 			//If the specified docker image (or the specific image and tag combination) requires
 			//nvidia-docker, we invoke nvidia-docker instead of regular docker
-			string docker = "docker";
 			auto nvDockerImages = NvidiaDockerImages::getList();
 			if (Utility::contains(nvDockerImages, imageWithoutTag) || Utility::contains(nvDockerImages, dockerImage)) {
-				docker = "nvidia-docker";
+				docker = NVIDIA_DOCKER;
 			}
 			
 			//If we were invoked using the symlink `nvidia-docker-script`, always use `nvidia-docker`
 			if (string(argv[0]) == "nvidia-docker-script") {
-				docker = "nvidia-docker";
+				docker = NVIDIA_DOCKER;
 			}
 			
 			//Build the `docker run` command
