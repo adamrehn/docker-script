@@ -118,7 +118,7 @@ int main (int argc, char* argv[])
 				string((enableDebugging == true) ? "--privileged=true " : "") +
 				string("--workdir=/workingdir ") +
 				string("-e \"HOST_CWD=") + workingDir + "\" " +
-				string((interactive == true) ? "-ti" : "") +
+				string((interactive == true) ? "-ti " : "") +
 				string("--rm --entrypoint=\"\" ") +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
