@@ -51,6 +51,7 @@ int main (int argc, char* argv[])
 			bool verboseOutput = false;
 			bool enableDebugging = false;
 			bool dryrun = false;
+			string dockerArgs = "";
 			string trailingArgs = "";
 			for (int i = 2; i < argc; ++i)
 			{
@@ -72,6 +73,9 @@ int main (int argc, char* argv[])
 				}
 				else if (currArg.substr(0,8) == "---name=") {
 					name = currArg.substr(8);
+				}
+				else if (currArg.substr(0,7) == "---arg=") {
+					dockerArgs += "\"" + currArg.substr(7) + "\" ";
 				}
 				else {
 					trailingArgs += "\"" + currArg + "\" ";
@@ -136,6 +140,7 @@ int main (int argc, char* argv[])
 				string((interactive == true) ? "-ti " : "-t ") +
 				string((!name.empty()) ? "--name \"" + name + "\" " : "") +
 				string("--rm --entrypoint=\"\" ") +
+				dockerArgs +
 				string("\"") + dockerImage + "\" " +
 				string("\"") + interpreter + "\" " +
 				string("\"/scriptdir/") + scriptFile + "\" " + trailingArgs;
@@ -182,6 +187,7 @@ int main (int argc, char* argv[])
 		clog << "---nvidia-docker      Use `nvidia-docker` instead of `docker`" << endl;
 		clog << "---dry-run            Output generated command instead of running it" << endl;
 		clog << "---name=NAME          Specify container name" << endl;
+		clog << "---arg=ARG            Specify additional arguments for `docker run`" << endl;
 		clog << endl;
 	}
 	
